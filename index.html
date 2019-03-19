@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <button @click='trigger'>切换</button>
+    <!-- <keep-alive>
+      <Component :is='currentComponent'></Component>
+    </keep-alive> -->
+    <my-count v-if='currentComponent'></my-count>
+    <component-a v-else></component-a>
+  </div>
+  <script src="vue.js"></script>
+  <!-- <script src="logic.js"></script>
+  <script src="defineProperty.js"></script>
+  <script src='applyCall.js'></script>
+  <script src="observer.js"></script> -->
+  <script>
+    // 全局注册
+    Vue.component('my-count',{
+      data: function(){
+        return {
+          count: 0
+        }
+      },
+      template: '<button key="bb" @click="count++">click me {{count}} times!</button>'
+    })
+    var ComponentA = {
+      data: function(){
+        return {
+          count: 0
+        }
+      },
+      template: '<button key="aa" @click="count++">click me {{count}} times!</button>',      
+      beforeCreate(){
+        console.log('创建前')
+      },
+      created(){
+        console.log('创建后')
+      },
+      beforeMount(){
+        console.log('挂载DOM前')
+      },
+      mounted(){
+        console.log('挂载DOM后')
+      },
+      beforeUpdate(){
+        console.log('更新前')
+      },
+      updated(){
+        console.log('更新后')
+      },
+      beforeDestory(){
+        console.log('销毁前')
+      },
+      destoryed(){
+        console.log('销毁后')
+      }
+    }
+    new Vue({
+      el: '#app',
+      // 局部注册
+      // 对于components对象中的每个属性来说，其属性名就是自定义元素的名字，其属性值就是这个组件的选项对象
+      // 注意：局部注册的组件在其子组件中不可用。例如，如果你希望ComponentA在ComponentB中可用，需要这样写
+      // var CpmponentA = {...}
+      // var ComponentB = {
+      //   components: {
+      //     'component-a': ComponentA
+      //   }
+      // }
+      components: {
+        'component-a': ComponentA
+      },
+      data: {
+        currentComponent: 'my-count'
+      },
+      methods: {
+        trigger(){
+          console.log(this.destory)
+          // this.currentComponent = this.currentComponent == 'my-count' ? ComponentA : 'my-count'
+          this.currentComponent = !!!this.currentComponent
+        }
+      }
+    })
+  </script>
+</body>
+</html>
